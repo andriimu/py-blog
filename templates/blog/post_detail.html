@@ -1,0 +1,38 @@
+{% extends 'blog/base.html' %}
+
+{% block namecont %}
+    {{ post.title }}
+{% endblock %}
+
+{% block maincont %}
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.content }}</p>
+    <p>By: {{ post.owner.username }}</p>
+    <p>Created on: {{ post.created_time }}</p>
+    <h2>Comments ({{ comments|length }})</h2>
+    <ul>
+        {% for comment in comments %}
+            <li >
+                <p>{{ comment.content }}</p>
+                <p>By: {{ comment.user.username }}</p>
+                <p>Created on: {{ comment.created_time }}</p>
+            </li>
+            <p>--------------------------------------------------------</p>
+        {% empty %}
+            <li>No comments yet.</li>
+        {% endfor %}
+    </ul>
+
+    {% if user.is_authenticated %}
+    <h2>Add a Comment</h2>
+    <form method="post">
+    
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {% else %}
+    <p>Please <a href="{% url 'login' %}">login</a> to add a comment.</p>
+    
+    {% endif %}
+{% endblock %}
